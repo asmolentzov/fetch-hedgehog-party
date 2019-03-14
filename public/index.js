@@ -51,12 +51,23 @@ const addNewHedgehog = (event) => {
     }),
   })
     .then(response => response.json())
-    .then(idInfo => getHedgehogs())
+    .then(response => getHedgehogs())
     .catch(error => console.error({ error }));
 };
 
-const unInviteHedgehog = () => {
+const unInviteHedgehog = (event) => {
+  event.preventDefault();
   console.log("we are in the unInviteHedgehog function");
+  const id = event.target.id;
+  fetch(`https://hedgehog-party.herokuapp.com/api/v1/invites/${id}`, {
+    method: 'DELETE'
+  })
+  .then(response => removeHedgehog(id))
+  .catch(error => console.error({ error }));
+};
+
+const removeHedgehog = (id) => {
+  $(`#${id}`).parent().hide();
 };
 
 getHedgehogs();
