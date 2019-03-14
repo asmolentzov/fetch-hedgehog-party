@@ -5,11 +5,27 @@ const getHedgehogs = () => {
 // Sets up the fetch request to the invites endpoint of the hedgehog API, aka, the best API.
   fetch(`https://hedgehog-party.herokuapp.com/api/v1/invites`)
   // When the fetch Promise resolves, take the response and convert it into JSON
-    .then(response => response.json())
+    .then(handleResponse)
     // When the response.json() Promise resolves, take THAT response as hedgehogs and call appendHedgehogs, passing it the hedgehogs JSON.
     .then(hedgehogs => appendHedgehogs(hedgehogs))
     // If either of the the Promises rejects, catch the error and log it. 
     .catch(error => console.error({ error }));
+};
+
+const handleResponse = (response) => {
+  return response.json()
+    .then((json) => {
+      if(response.ok) {
+        return json;
+      } else {
+        const error = {
+          status: response.status,
+          statusText: response.statusText,
+          json
+        }
+        return Promise.reject(error)
+      }
+    })
 };
 
 // Loops through the hedgehogs array and calls appendHedgehog for each individual hedgie
